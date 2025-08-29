@@ -14,25 +14,45 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+import { UserProvider } from "@/context/UserContext";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SignUp />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <UserProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<SignUp />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
+      </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+declare global {
+  interface Window {
+    __app_root?: ReturnType<typeof createRoot>;
+  }
+}
+
+const container = document.getElementById("root")!;
+if (!window.__app_root) {
+  window.__app_root = createRoot(container);
+}
+window.__app_root.render(<App />);
+
+if (import.meta && (import.meta as any).hot) {
+  (import.meta as any).hot.accept(() => {
+    window.__app_root?.render(<App />);
+  });
+}
