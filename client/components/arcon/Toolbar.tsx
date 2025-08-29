@@ -8,7 +8,11 @@ export interface ToolbarProps {
   onAddNew?: () => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ onSearchChange, onFilter, onAddNew }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({
+  onSearchChange,
+  onFilter,
+  onAddNew,
+}) => {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex-1 max-w-md">
@@ -20,10 +24,17 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onSearchChange, onFilter, onAd
         />
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="outline" className="h-10 rounded-control border-arcon-gray-border text-arcon-gray-primary" onClick={onFilter}>
+        <Button
+          variant="outline"
+          className="h-10 rounded-control border-arcon-gray-border text-arcon-gray-primary"
+          onClick={onFilter}
+        >
           Filter
         </Button>
-        <Button className="h-10 rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover" onClick={onAddNew}>
+        <Button
+          className="h-10 rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover"
+          onClick={onAddNew}
+        >
           Add New
         </Button>
       </div>

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,9 +17,18 @@ export interface EditProfileDialogProps {
   onSave: (data: { firstName: string; lastName: string }) => Promise<void>;
 }
 
-export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOpenChange, firstName, lastName, onSave }) => {
+export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
+  open,
+  onOpenChange,
+  firstName,
+  lastName,
+  onSave,
+}) => {
   const [form, setForm] = useState({ firstName, lastName });
-  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+  }>({});
   const [saving, setSaving] = useState(false);
   const [submitError, setSubmitError] = useState<string>("");
 
@@ -32,10 +47,16 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOp
     setSaving(true);
     setSubmitError("");
     try {
-      await onSave({ firstName: form.firstName.trim(), lastName: form.lastName.trim() });
+      await onSave({
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+      });
       onOpenChange(false);
     } catch (err: any) {
-      const msg = typeof err === "string" ? err : err?.message || "Failed to save profile";
+      const msg =
+        typeof err === "string"
+          ? err
+          : err?.message || "Failed to save profile";
       setSubmitError(msg);
     } finally {
       setSaving(false);
@@ -50,37 +71,58 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOp
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div>
-            <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">First Name</label>
+            <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+              First Name
+            </label>
             <Input
               value={form.firstName}
-              onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, firstName: e.target.value }))
+              }
               placeholder="Enter your first name"
               className="h-12 rounded-control border-arcon-gray-border"
             />
             {errors.firstName && (
-              <p className="mt-1 text-sm text-red-600 font-roboto">{errors.firstName}</p>
+              <p className="mt-1 text-sm text-red-600 font-roboto">
+                {errors.firstName}
+              </p>
             )}
           </div>
           <div>
-            <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">Last Name</label>
+            <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+              Last Name
+            </label>
             <Input
               value={form.lastName}
-              onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, lastName: e.target.value }))
+              }
               placeholder="Enter your last name"
               className="h-12 rounded-control border-arcon-gray-border"
             />
             {errors.lastName && (
-              <p className="mt-1 text-sm text-red-600 font-roboto">{errors.lastName}</p>
+              <p className="mt-1 text-sm text-red-600 font-roboto">
+                {errors.lastName}
+              </p>
             )}
           </div>
           {submitError && (
             <p className="text-sm text-red-600 font-roboto">{submitError}</p>
           )}
           <DialogFooter>
-            <Button type="button" variant="secondary" onClick={() => onOpenChange(false)} className="rounded-control">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => onOpenChange(false)}
+              className="rounded-control"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={saving} className="rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover">
+            <Button
+              type="submit"
+              disabled={saving}
+              className="rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover"
+            >
               {saving ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>

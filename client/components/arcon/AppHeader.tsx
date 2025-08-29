@@ -17,17 +17,30 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onAddNew,
 }) => {
   return (
-    <header className={cn("w-full border-b border-arcon-gray-border bg-white/80 backdrop-blur-sm", className)}>
+    <header
+      className={cn(
+        "w-full border-b border-arcon-gray-border bg-white/80 backdrop-blur-sm",
+        className,
+      )}
+    >
       <div className="mx-auto max-w-[1200px] px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <svg width="24" height="24" viewBox="0 0 30 30" aria-hidden="true" fill="none">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 30 30"
+            aria-hidden="true"
+            fill="none"
+          >
             <path
               d="M27.3723 22.6039C27.9964 23.7209 27.189 25.097 25.9095 25.097H4.88702C3.6005 25.097 2.79387 23.7073 3.43201 22.5902L14.0587 3.98729C14.7055 2.85516 16.3405 2.86285 16.9765 4.00102L27.3723 22.6039Z"
               stroke="#D83A52"
               strokeWidth="2.5"
             />
           </svg>
-          <span className="text-arcon-gray-primary text-xl font-bold font-roboto">arcon</span>
+          <span className="text-arcon-gray-primary text-xl font-bold font-roboto">
+            arcon
+          </span>
         </div>
 
         <div className="flex items-center gap-3">

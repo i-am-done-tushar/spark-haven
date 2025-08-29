@@ -37,9 +37,17 @@ export function DataTable<T extends Record<string, any>>({
   }, [totalPages, page]);
 
   return (
-    <div className={cn("rounded-[12px] border border-arcon-gray-border bg-white", className)}>
+    <div
+      className={cn(
+        "rounded-[12px] border border-arcon-gray-border bg-white",
+        className,
+      )}
+    >
       <div className="relative max-h-[480px] overflow-auto">
-        <table className="w-full text-left border-collapse" aria-label="data table">
+        <table
+          className="w-full text-left border-collapse"
+          aria-label="data table"
+        >
           <thead className="sticky top-0 z-10 bg-white">
             <tr className="text-sm text-arcon-gray-secondary">
               {columns.map((col) => (
@@ -57,41 +65,51 @@ export function DataTable<T extends Record<string, any>>({
             </tr>
           </thead>
           <tbody className="text-sm text-arcon-gray-primary">
-            {loading
-              ? Array.from({ length: pageSize }).map((_, i) => (
-                  <tr key={i} className="even:bg-arcon-panel">
-                    {columns.map((col, j) => (
-                      <td key={j} className="px-4 py-3 border-b border-arcon-gray-border">
-                        <Skeleton className="h-4 w-3/4" />
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              : pageRows.length === 0
-              ? (
-                  <tr>
-                    <td colSpan={columns.length} className="px-4 py-12 text-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <p className="text-arcon-gray-primary font-roboto">{emptyMessage}</p>
-                        <Button className="rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover">Add New</Button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              : (
-                  pageRows.map((row, idx) => (
-                    <tr
-                      key={idx}
-                      className="odd:bg-white even:bg-arcon-panel hover:bg-[#2563EB0D] focus-within:bg-[#2563EB0D]"
+            {loading ? (
+              Array.from({ length: pageSize }).map((_, i) => (
+                <tr key={i} className="even:bg-arcon-panel">
+                  {columns.map((col, j) => (
+                    <td
+                      key={j}
+                      className="px-4 py-3 border-b border-arcon-gray-border"
                     >
-                      {columns.map((col, j) => (
-                        <td key={j} className="px-4 py-3 border-b border-arcon-gray-border">
-                          {col.render ? col.render(row) : String(row[col.key] ?? "")}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                )}
+                      <Skeleton className="h-4 w-3/4" />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : pageRows.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="px-4 py-12 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-arcon-gray-primary font-roboto">
+                      {emptyMessage}
+                    </p>
+                    <Button className="rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover">
+                      Add New
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              pageRows.map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="odd:bg-white even:bg-arcon-panel hover:bg-[#2563EB0D] focus-within:bg-[#2563EB0D]"
+                >
+                  {columns.map((col, j) => (
+                    <td
+                      key={j}
+                      className="px-4 py-3 border-b border-arcon-gray-border"
+                    >
+                      {col.render
+                        ? col.render(row)
+                        : String(row[col.key] ?? "")}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

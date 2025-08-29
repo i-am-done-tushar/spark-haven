@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
         throw new Error("Failed to fetch users");
       }
       const data = await res.json();
-      const list = Array.isArray(data) ? data : data?.data ?? [];
+      const list = Array.isArray(data) ? data : (data?.data ?? []);
       setUsers(list);
     } catch (e: any) {
       setError(e?.message || "Failed to load users");
@@ -94,11 +94,16 @@ const Dashboard: React.FC = () => {
     const q = search.toLowerCase();
     if (!q) return users;
     return users.filter((u) =>
-      [u.id.toString(), u.firstName, u.lastName, u.email].some((v) => v.toLowerCase().includes(q)),
+      [u.id.toString(), u.firstName, u.lastName, u.email].some((v) =>
+        v.toLowerCase().includes(q),
+      ),
     );
   }, [search, users]);
 
-  const handleSaveProfile = async (data: { firstName: string; lastName: string }) => {
+  const handleSaveProfile = async (data: {
+    firstName: string;
+    lastName: string;
+  }) => {
     const res = await fetch("http://localhost:5294/api/User/profile", {
       method: "PUT",
       headers: {
@@ -120,12 +125,20 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <AppHeader onSearchChange={setSearch} onAddNew={() => {}} onFilter={() => {}} />
+      <AppHeader
+        onSearchChange={setSearch}
+        onAddNew={() => {}}
+        onFilter={() => {}}
+      />
       <main className="mx-auto max-w-[1200px] px-6 py-6">
         <div className="mb-6 flex items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-arcon-gray-heading font-roboto">Dashboard</h1>
-            <p className="text-sm text-arcon-gray-secondary font-roboto mt-1">All Users</p>
+            <h1 className="text-2xl font-bold text-arcon-gray-heading font-roboto">
+              Dashboard
+            </h1>
+            <p className="text-sm text-arcon-gray-secondary font-roboto mt-1">
+              All Users
+            </p>
           </div>
           <Button
             variant="outline"
@@ -137,7 +150,11 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <Toolbar onSearchChange={setSearch} onAddNew={() => {}} onFilter={() => {}} />
+          <Toolbar
+            onSearchChange={setSearch}
+            onAddNew={() => {}}
+            onFilter={() => {}}
+          />
         </div>
 
         {error ? (

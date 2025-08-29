@@ -16,7 +16,11 @@ const variantClasses: Record<StatusVariant, string> = {
   danger: "bg-red-50 text-red-700 border-red-200",
 };
 
-export const StatusPill: React.FC<StatusPillProps> = ({ label, variant = "neutral", className }) => {
+export const StatusPill: React.FC<StatusPillProps> = ({
+  label,
+  variant = "neutral",
+  className,
+}) => {
   return (
     <span
       className={cn(

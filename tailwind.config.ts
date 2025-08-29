@@ -74,7 +74,7 @@ export default {
         },
       },
       fontFamily: {
-        roboto: ['Roboto', 'system-ui', 'sans-serif'],
+        roboto: ["Roboto", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
