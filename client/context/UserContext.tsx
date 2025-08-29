@@ -63,6 +63,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("access");
     setAndPersist(null);
   }, [setAndPersist]);
 
