@@ -79,8 +79,8 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
             <Input
               value={email}
               readOnly
-              disabled
-              className="h-12 rounded-control border-arcon-gray-border"
+              aria-readonly
+              className="h-12 rounded-control border-arcon-gray-border bg-gray-50"
             />
           </div>
           <div>
