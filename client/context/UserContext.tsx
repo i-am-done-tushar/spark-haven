@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export type UserProfile = {
   firstName: string;
@@ -36,14 +43,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     else localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const setAndPersist = useCallback((p: UserProfile | null) => {
-    setProfile(p);
-    persist(p);
-  }, [persist]);
+  const setAndPersist = useCallback(
+    (p: UserProfile | null) => {
+      setProfile(p);
+      persist(p);
+    },
+    [persist],
+  );
 
-  const updateProfile = useCallback((partial: Partial<UserProfile>) => {
-    setAndPersist({ ...(profile ?? { firstName: "", lastName: "" }), ...partial });
-  }, [profile, setAndPersist]);
+  const updateProfile = useCallback(
+    (partial: Partial<UserProfile>) => {
+      setAndPersist({
+        ...(profile ?? { firstName: "", lastName: "" }),
+        ...partial,
+      });
+    },
+    [profile, setAndPersist],
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("authToken");
@@ -57,13 +73,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return [first, last].filter(Boolean).join(" ") || "Guest";
   }, [profile]);
 
-  const value: UserContextValue = useMemo(() => ({
-    profile,
-    fullName,
-    setProfile: setAndPersist,
-    updateProfile,
-    logout,
-  }), [profile, fullName, setAndPersist, updateProfile, logout]);
+  const value: UserContextValue = useMemo(
+    () => ({
+      profile,
+      fullName,
+      setProfile: setAndPersist,
+      updateProfile,
+      logout,
+    }),
+    [profile, fullName, setAndPersist, updateProfile, logout],
+  );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
