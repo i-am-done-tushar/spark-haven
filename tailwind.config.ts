@@ -26,17 +26,17 @@ export default {
         // Arcon design system colors
         arcon: {
           blue: {
-            DEFAULT: "#0073EA",
-            light: "#E0EFFE",
-            gradient: "#BCD2E8",
+            DEFAULT: "#2563EB",
+            hover: "#1E4FCC",
           },
-          pink: "#F8E4E8",
+          coral: "#D83A52",
           gray: {
-            primary: "#323238",
-            secondary: "#676879",
-            heading: "#172B4D",
-            border: "#C3C6D4",
+            heading: "#2E2E2E",
+            primary: "#3A4651",
+            secondary: "#6B7380",
+            border: "#E5E7EB",
           },
+          panel: "#F7FAFF",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -74,12 +74,14 @@ export default {
         },
       },
       fontFamily: {
-        roboto: ['Roboto', 'system-ui', 'sans-serif'],
+        roboto: ["Roboto", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        card: "12px",
+        control: "8px",
       },
       keyframes: {
         "accordion-down": {
