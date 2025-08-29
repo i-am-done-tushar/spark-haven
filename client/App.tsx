@@ -40,7 +40,9 @@ const App = () => (
 );
 
 declare global {
-  interface Window { __app_root?: ReturnType<typeof createRoot> }
+  interface Window {
+    __app_root?: ReturnType<typeof createRoot>;
+  }
 }
 
 const container = document.getElementById("root")!;
