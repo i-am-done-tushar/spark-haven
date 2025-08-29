@@ -4,6 +4,7 @@ import Toolbar from "@/components/arcon/Toolbar";
 import DataTable, { Column } from "@/components/arcon/DataTable";
 import EditProfileDialog from "@/components/arcon/EditProfileDialog";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   id: number;
@@ -12,14 +13,6 @@ interface User {
   email: string;
   createdAt: string;
 }
-
-const mockUsers: User[] = Array.from({ length: 28 }).map((_, i) => ({
-  id: i + 1,
-  firstName: i % 3 === 0 ? "Alex" : i % 3 === 1 ? "Sam" : "Jordan",
-  lastName: i % 2 === 0 ? "Taylor" : "Morgan",
-  email: `user${i + 1}@example.com`,
-  createdAt: new Date(Date.now() - i * 86400000).toISOString(),
-}));
 
 const columns: Column<User>[] = [
   { key: "id", header: "ID", className: "w-[80px]" },
@@ -36,15 +29,94 @@ const columns: Column<User>[] = [
 const Dashboard: React.FC = () => {
   const [search, setSearch] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [profile, setProfile] = React.useState({ firstName: "Alex", lastName: "Taylor" });
+  const [profile, setProfile] = React.useState({ firstName: "", lastName: "" });
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
+
+  const navigate = useNavigate();
+  const tokenRef = React.useRef<string | null>(null);
+
+  React.useEffect(() => {
+    tokenRef.current = localStorage.getItem("access");
+    if (!tokenRef.current) {
+      navigate("/login");
+      return;
+    }
+    const init = async () => {
+      setLoading(true);
+      setError("");
+      await Promise.all([loadUsers(), loadProfile()]);
+      setLoading(false);
+    };
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadUsers = async () => {
+    try {
+      const res = await fetch("http://localhost:5294/api/User", {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${tokenRef.current}`,
+        },
+      });
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized");
+        throw new Error("Failed to fetch users");
+      }
+      const data = await res.json();
+      const list = Array.isArray(data) ? data : data?.data ?? [];
+      setUsers(list);
+    } catch (e: any) {
+      setError(e?.message || "Failed to load users");
+    }
+  };
+
+  const loadProfile = async () => {
+    try {
+      const res = await fetch("http://localhost:5294/api/User/profile", {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${tokenRef.current}`,
+        },
+      });
+      if (!res.ok) return;
+      const body = await res.json();
+      const p = body?.data ?? body;
+      setProfile({ firstName: p.firstName ?? "", lastName: p.lastName ?? "" });
+    } catch {
+      // ignore
+    }
+  };
 
   const filtered = React.useMemo(() => {
     const q = search.toLowerCase();
-    if (!q) return mockUsers;
-    return mockUsers.filter((u) =>
+    if (!q) return users;
+    return users.filter((u) =>
       [u.id.toString(), u.firstName, u.lastName, u.email].some((v) => v.toLowerCase().includes(q)),
     );
-  }, [search]);
+  }, [search, users]);
+
+  const handleSaveProfile = async (data: { firstName: string; lastName: string }) => {
+    const res = await fetch("http://localhost:5294/api/User/profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenRef.current}`,
+      },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      let message = "Failed to update profile";
+      try {
+        const err = await res.json();
+        message = err?.message || message;
+      } catch {}
+      throw new Error(message);
+    }
+    await Promise.all([loadProfile(), loadUsers()]);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -68,12 +140,18 @@ const Dashboard: React.FC = () => {
           <Toolbar onSearchChange={setSearch} onAddNew={() => {}} onFilter={() => {}} />
         </div>
 
-        <DataTable<User>
-          columns={columns}
-          data={filtered}
-          loading={false}
-          emptyMessage="No users found. Add a new user to get started."
-        />
+        {error ? (
+          <div className="rounded-[12px] border border-arcon-gray-border bg-white p-6 text-sm text-red-600 font-roboto">
+            {error}
+          </div>
+        ) : (
+          <DataTable<User>
+            columns={columns}
+            data={filtered}
+            loading={loading}
+            emptyMessage="No users found. Add a new user to get started."
+          />
+        )}
       </main>
 
       <EditProfileDialog
@@ -81,7 +159,7 @@ const Dashboard: React.FC = () => {
         onOpenChange={setOpen}
         firstName={profile.firstName}
         lastName={profile.lastName}
-        onSave={(data) => setProfile(data)}
+        onSave={handleSaveProfile}
       />
     </div>
   );
