@@ -5,13 +5,11 @@ import React from "react";
 export interface ToolbarProps {
   onSearchChange?: (value: string) => void;
   onFilter?: () => void;
-  onAddNew?: () => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
   onSearchChange,
   onFilter,
-  onAddNew,
 }) => {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -30,12 +28,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onClick={onFilter}
         >
           Filter
-        </Button>
-        <Button
-          className="h-10 rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover"
-          onClick={onAddNew}
-        >
-          Add New
         </Button>
       </div>
     </div>
