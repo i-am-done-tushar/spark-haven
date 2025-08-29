@@ -53,7 +53,8 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("authToken", data.token);
+        if (data?.token) localStorage.setItem("authToken", data.token);
+        if (data?.accessToken) localStorage.setItem("access", data.accessToken);
         if (!profile) {
           const nameFromEmail = formData.email.split("@")[0] || "User";
           setProfile({
