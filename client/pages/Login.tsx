@@ -63,6 +63,10 @@ export default function Login() {
             email: formData.email,
           });
         }
+        // Store token or user data as needed
+        // localStorage.setItem("authToken", data.token);
+        localStorage.setItem("access", data.data.accessToken);
+        // Redirect to dashboard or home page
         navigate("/dashboard");
       } else {
         const errorData = await response.json();
