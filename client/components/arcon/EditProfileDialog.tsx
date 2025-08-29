@@ -8,13 +8,14 @@ export interface EditProfileDialogProps {
   onOpenChange: (open: boolean) => void;
   firstName: string;
   lastName: string;
-  onSave: (data: { firstName: string; lastName: string }) => void;
+  onSave: (data: { firstName: string; lastName: string }) => Promise<void>;
 }
 
 export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOpenChange, firstName, lastName, onSave }) => {
   const [form, setForm] = useState({ firstName, lastName });
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
   const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState<string>("");
 
   React.useEffect(() => {
     setForm({ firstName, lastName });
@@ -29,9 +30,13 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOp
     if (Object.keys(nextErrors).length) return;
 
     setSaving(true);
+    setSubmitError("");
     try {
-      onSave({ firstName: form.firstName.trim(), lastName: form.lastName.trim() });
+      await onSave({ firstName: form.firstName.trim(), lastName: form.lastName.trim() });
       onOpenChange(false);
+    } catch (err: any) {
+      const msg = typeof err === "string" ? err : err?.message || "Failed to save profile";
+      setSubmitError(msg);
     } finally {
       setSaving(false);
     }
@@ -68,6 +73,9 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({ open, onOp
               <p className="mt-1 text-sm text-red-600 font-roboto">{errors.lastName}</p>
             )}
           </div>
+          {submitError && (
+            <p className="text-sm text-red-600 font-roboto">{submitError}</p>
+          )}
           <DialogFooter>
             <Button type="button" variant="secondary" onClick={() => onOpenChange(false)} className="rounded-control">
               Cancel
