@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export default function Login() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { profile, setProfile } = useUser();
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -51,9 +53,11 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        // Store token or user data as needed
         localStorage.setItem("authToken", data.token);
-        // Redirect to dashboard or home page
+        if (!profile) {
+          const nameFromEmail = formData.email.split("@")[0] || "User";
+          setProfile({ firstName: nameFromEmail, lastName: "", email: formData.email });
+        }
         navigate("/dashboard");
       } else {
         const errorData = await response.json();
