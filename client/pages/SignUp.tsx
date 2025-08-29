@@ -1,11 +1,13 @@
 import { useState } from "react";
-// import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +15,16 @@ export default function SignUp() {
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
+
+    // First name
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+
+    // Last name
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
 
     // Email validation
     if (!formData.email) {
@@ -28,31 +40,47 @@ export default function SignUp() {
       newErrors.password = "Password must be at least 6 characters";
     }
 
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.confirmPassword !== formData.password) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
     setErrors({});
 
     try {
-      const response = await fetch("https://localhost:5299/api/Auth/register", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email: formData.email, password: formData.password }),
-});
+      const response = await fetch("https://localhost:5294/api/Auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+        }),
+      });
 
       if (response.ok) {
-        // Redirect to login page on successful registration
         navigate("/login");
       } else {
-        const errorData = await response.json();
-        setErrors({ submit: errorData.message || "Registration failed" });
+        let message = "Registration failed";
+        try {
+          const errorData = await response.json();
+          message = errorData.message || message;
+        } catch {}
+        setErrors({ submit: message });
       }
     } catch (error) {
       setErrors({ submit: "Network error. Please try again." });
@@ -63,10 +91,9 @@ export default function SignUp() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -77,23 +104,23 @@ export default function SignUp() {
         {/* Background Blur Effects */}
         <div className="absolute inset-0">
           {/* Large blue gradient circle */}
-          <div 
+          <div
             className="absolute w-[342px] h-[342px] rounded-full opacity-80"
             style={{
-              background: '#BCD2E8',
-              filter: 'blur(115px)',
-              left: '335px',
-              top: '301px',
+              background: "#BCD2E8",
+              filter: "blur(115px)",
+              left: "335px",
+              top: "301px",
             }}
           />
           {/* Large ellipse */}
-          <div 
+          <div
             className="absolute w-[465px] h-[397px] rounded-full opacity-80"
             style={{
-              background: '#E0EFFE',
-              filter: 'blur(80px)',
-              left: '0px',
-              top: '0px',
+              background: "#E0EFFE",
+              filter: "blur(80px)",
+              left: "0px",
+              top: "0px",
             }}
           />
         </div>
@@ -101,49 +128,56 @@ export default function SignUp() {
         {/* Decorative Elements */}
         <div className="relative z-10">
           {/* Floating gradient elements */}
-          <div 
+          <div
             className="absolute w-[279px] h-[123px] opacity-80"
             style={{
-              left: '190px',
-              top: '214px',
-              transform: 'rotate(-12.392deg)',
+              left: "190px",
+              top: "214px",
+              transform: "rotate(-12.392deg)",
             }}
           >
-            <div 
+            <div
               className="absolute w-full h-full rounded-full"
               style={{
-                background: 'linear-gradient(135deg, #F8E4E8 0%, #E0EFFE 100%)',
-                filter: 'blur(34px)',
+                background: "linear-gradient(135deg, #F8E4E8 0%, #E0EFFE 100%)",
+                filter: "blur(34px)",
               }}
             />
           </div>
 
           {/* Main illustration cards */}
-          <div className="absolute" style={{ left: '275px', top: '140px' }}>
+          <div className="absolute" style={{ left: "275px", top: "140px" }}>
             {/* Background card (rotated) */}
-            <div 
+            <div
               className="absolute w-[252px] h-[318px] rounded-3xl border border-black/10"
               style={{
-                background: 'linear-gradient(324deg, #E0EFFE 19.3%, #F3CFFF 70.5%)',
-                backdropFilter: 'blur(7.5px)',
-                transform: 'rotate(6.554deg)',
+                background:
+                  "linear-gradient(324deg, #E0EFFE 19.3%, #F3CFFF 70.5%)",
+                backdropFilter: "blur(7.5px)",
+                transform: "rotate(6.554deg)",
               }}
             />
-            
+
             {/* Front card */}
-            <div 
+            <div
               className="absolute w-[252px] h-[318px] rounded-3xl border border-black/10 bg-white"
               style={{
-                left: '1px',
-                top: '10px',
-                backdropFilter: 'blur(7.5px)',
+                left: "1px",
+                top: "10px",
+                backdropFilter: "blur(7.5px)",
               }}
             >
               {/* Check icon */}
               <div className="absolute top-6 right-6">
                 <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center">
                   <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                    <path d="M1 5L5 9L13 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path
+                      d="M1 5L5 9L13 1"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
@@ -151,13 +185,27 @@ export default function SignUp() {
               {/* Content area */}
               <div className="absolute inset-4 top-16">
                 <div className="w-full h-[130px] rounded-2xl bg-arcon-blue-light"></div>
-                
+
                 {/* Identity verification illustration */}
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
                   <div className="w-16 h-16 rounded-full bg-white/50 flex items-center justify-center">
                     <svg width="40" height="40" viewBox="0 0 67 94" fill="none">
-                      <path d="M33.5 80.1898V93.5464L51.6857 70.2102L33.5 80.1898Z" stroke="#91ACC8" strokeWidth="1.8144" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M33.5 93.5464L52.3406 83.6172L51.6857 70.2102" stroke="#91ACC8" strokeWidth="1.8144" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M33.5 80.1898V93.5464L51.6857 70.2102L33.5 80.1898Z"
+                        stroke="#91ACC8"
+                        strokeWidth="1.8144"
+                        strokeMiterlimit="10"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M33.5 93.5464L52.3406 83.6172L51.6857 70.2102"
+                        stroke="#91ACC8"
+                        strokeWidth="1.8144"
+                        strokeMiterlimit="10"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -185,7 +233,8 @@ export default function SignUp() {
             Proof of identity, made simple.
           </h2>
           <p className="text-arcon-gray-secondary text-sm font-roboto leading-relaxed">
-            Easily verify your identity in seconds with our secure and seamless process.
+            Easily verify your identity in seconds with our secure and seamless
+            process.
           </p>
         </div>
       </div>
@@ -194,21 +243,22 @@ export default function SignUp() {
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 lg:px-16 bg-white relative">
         {/* Decorative background elements */}
         <div className="absolute top-0 right-0 w-full h-full overflow-hidden">
-          <div 
+          <div
             className="absolute opacity-80"
             style={{
-              width: '279px',
-              height: '123px',
-              right: '-50px',
-              top: '214px',
-              transform: 'rotate(-12.392deg)',
+              width: "279px",
+              height: "123px",
+              right: "-50px",
+              top: "214px",
+              transform: "rotate(-12.392deg)",
             }}
           >
-            <div 
+            <div
               className="w-full h-full rounded-full"
               style={{
-                background: 'linear-gradient(135deg, #F8E4E8 50%, #E0EFFE 100%)',
-                filter: 'blur(20px)',
+                background:
+                  "linear-gradient(135deg, #F8E4E8 50%, #E0EFFE 100%)",
+                filter: "blur(20px)",
                 opacity: 0.6,
               }}
             />
@@ -221,14 +271,16 @@ export default function SignUp() {
             <div className="flex items-center gap-3">
               {/* Arcon Triangle Logo */}
               <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path 
-                  d="M27.3723 22.6039C27.9964 23.7209 27.189 25.097 25.9095 25.097H4.88702C3.6005 25.097 2.79387 23.7073 3.43201 22.5902L14.0587 3.98729C14.7055 2.85516 16.3405 2.86285 16.9765 4.00102L27.3723 22.6039Z" 
-                  stroke="#D83A52" 
-                  strokeWidth="2.5" 
+                <path
+                  d="M27.3723 22.6039C27.9964 23.7209 27.189 25.097 25.9095 25.097H4.88702C3.6005 25.097 2.79387 23.7073 3.43201 22.5902L14.0587 3.98729C14.7055 2.85516 16.3405 2.86285 16.9765 4.00102L27.3723 22.6039Z"
+                  stroke="#D83A52"
+                  strokeWidth="2.5"
                   fill="none"
                 />
               </svg>
-              <span className="text-arcon-gray-primary text-2xl font-bold font-roboto">arcon</span>
+              <span className="text-arcon-gray-primary text-2xl font-bold font-roboto">
+                arcon
+              </span>
             </div>
           </div>
 
@@ -244,6 +296,58 @@ export default function SignUp() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* First Name */}
+            <div>
+              <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+                First Name
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your first name"
+                  className={`w-full h-[54px] px-3 py-4 border rounded font-roboto text-base placeholder-arcon-gray-secondary ${
+                    errors.firstName
+                      ? "border-red-500"
+                      : "border-arcon-gray-border"
+                  } focus:outline-none focus:ring-2 focus:ring-arcon-blue focus:border-transparent`}
+                />
+              </div>
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1 font-roboto">
+                  {errors.firstName}
+                </p>
+              )}
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+                Last Name
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your last name"
+                  className={`w-full h-[54px] px-3 py-4 border rounded font-roboto text-base placeholder-arcon-gray-secondary ${
+                    errors.lastName
+                      ? "border-red-500"
+                      : "border-arcon-gray-border"
+                  } focus:outline-none focus:ring-2 focus:ring-arcon-blue focus:border-transparent`}
+                />
+              </div>
+              {errors.lastName && (
+                <p className="text-red-500 text-sm mt-1 font-roboto">
+                  {errors.lastName}
+                </p>
+              )}
+            </div>
+
             {/* Email Field */}
             <div>
               <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
@@ -257,12 +361,14 @@ export default function SignUp() {
                   onChange={handleInputChange}
                   placeholder="Enter your email address"
                   className={`w-full h-[54px] px-3 py-4 border rounded font-roboto text-base placeholder-arcon-gray-secondary ${
-                    errors.email ? 'border-red-500' : 'border-arcon-gray-border'
+                    errors.email ? "border-red-500" : "border-arcon-gray-border"
                   } focus:outline-none focus:ring-2 focus:ring-arcon-blue focus:border-transparent`}
                 />
               </div>
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1 font-roboto">{errors.email}</p>
+                <p className="text-red-500 text-sm mt-1 font-roboto">
+                  {errors.email}
+                </p>
               )}
             </div>
 
@@ -279,12 +385,42 @@ export default function SignUp() {
                   onChange={handleInputChange}
                   placeholder="Enter your password"
                   className={`w-full h-[54px] px-3 py-4 border rounded font-roboto text-base placeholder-arcon-gray-secondary ${
-                    errors.password ? 'border-red-500' : 'border-arcon-gray-border'
+                    errors.password
+                      ? "border-red-500"
+                      : "border-arcon-gray-border"
                   } focus:outline-none focus:ring-2 focus:ring-arcon-blue focus:border-transparent`}
                 />
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1 font-roboto">{errors.password}</p>
+                <p className="text-red-500 text-sm mt-1 font-roboto">
+                  {errors.password}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password Field */}
+            <div>
+              <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Re-enter your password"
+                  className={`w-full h-[54px] px-3 py-4 border rounded font-roboto text-base placeholder-arcon-gray-secondary ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-arcon-gray-border"
+                  } focus:outline-none focus:ring-2 focus:ring-arcon-blue focus:border-transparent`}
+                />
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1 font-roboto">
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
 
