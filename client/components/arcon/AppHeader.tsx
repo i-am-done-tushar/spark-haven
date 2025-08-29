@@ -7,14 +7,14 @@ export interface AppHeaderProps {
   className?: string;
   onSearchChange?: (value: string) => void;
   onFilter?: () => void;
-  onAddNew?: () => void;
+  userName?: string;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
   className,
   onSearchChange,
   onFilter,
-  onAddNew,
+  userName,
 }) => {
   return (
     <header
@@ -59,12 +59,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           >
             Filter
           </Button>
-          <Button
-            className="h-10 rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover"
-            onClick={onAddNew}
-          >
-            Add New
-          </Button>
+          {userName ? (
+            <span className="ml-2 text-arcon-gray-primary font-roboto">{userName}</span>
+          ) : null}
         </div>
       </div>
     </header>
