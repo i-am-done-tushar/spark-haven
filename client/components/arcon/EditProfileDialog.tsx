@@ -14,6 +14,7 @@ export interface EditProfileDialogProps {
   onOpenChange: (open: boolean) => void;
   firstName: string;
   lastName: string;
+  email: string;
   onSave: (data: { firstName: string; lastName: string }) => Promise<void>;
 }
 
@@ -22,6 +23,7 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
   onOpenChange,
   firstName,
   lastName,
+  email,
   onSave,
 }) => {
   const [form, setForm] = useState({ firstName, lastName });
@@ -70,6 +72,17 @@ export const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
           <DialogTitle className="font-roboto">Edit profile</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <div>
+            <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
+              Email
+            </label>
+            <Input
+              value={email}
+              readOnly
+              disabled
+              className="h-12 rounded-control border-arcon-gray-border"
+            />
+          </div>
           <div>
             <label className="block text-arcon-gray-primary text-sm font-medium mb-2 font-roboto">
               First Name
