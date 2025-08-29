@@ -85,9 +85,6 @@ export function DataTable<T extends Record<string, any>>({
                     <p className="text-arcon-gray-primary font-roboto">
                       {emptyMessage}
                     </p>
-                    <Button className="rounded-control bg-arcon-blue text-white hover:bg-arcon-blue-hover">
-                      Add New
-                    </Button>
                   </div>
                 </td>
               </tr>
