@@ -140,7 +140,9 @@ const Dashboard: React.FC = () => {
       <AppHeader
         onSearchChange={setSearch}
         onFilter={() => {}}
-        userName={((profile.firstName + " " + profile.lastName).trim() || profile.email)}
+        userName={
+          (profile.firstName + " " + profile.lastName).trim() || profile.email
+        }
       />
       <main className="mx-auto max-w-[1200px] px-6 py-6">
         <div className="mb-6 flex items-center justify-between gap-3">
