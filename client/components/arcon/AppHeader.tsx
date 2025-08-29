@@ -34,7 +34,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <div className="w-64">
             <Input
               placeholder="Search..."
-              className="h-10 rounded-control border-arcon-gray-border focus-visible:ring-[--arcon-blue]"
+              className="h-10 rounded-control border-arcon-gray-border"
               onChange={(e) => onSearchChange?.(e.target.value)}
               aria-label="Search"
             />
