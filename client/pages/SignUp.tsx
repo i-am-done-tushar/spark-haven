@@ -60,7 +60,7 @@ export default function SignUp() {
     setErrors({});
 
     try {
-      const response = await fetch("https://localhost:5294/api/Auth/register", {
+      const response = await fetch("http://localhost:5294/api/Auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
