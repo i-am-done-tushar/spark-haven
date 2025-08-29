@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function SignUp() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { setProfile } = useUser();
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -73,6 +75,12 @@ export default function SignUp() {
       });
 
       if (response.ok) {
+        // Prefetch profile data for later use
+        setProfile({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+        });
         navigate("/login");
       } else {
         let message = "Registration failed";
