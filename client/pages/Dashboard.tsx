@@ -191,25 +191,25 @@ const Dashboard = () => {
       {/* Users table (unchanged) */}
       <main className="max-w-6xl mx-auto px-4 py-6">
         <h1 className="text-arcon-gray-heading text-2xl font-bold font-roboto mb-4">All Users</h1>
-        <div className="overflow-x-auto border border-arcon-gray-border rounded-lg">
-          <table className="min-w-full text-left">
-            <thead className="bg-gray-50">
-              <tr className="text-sm text-arcon-gray-primary">
-                <th className="px-4 py-3 border-b">ID</th>
-                <th className="px-4 py-3 border-b">First Name</th>
-                <th className="px-4 py-3 border-b">Last Name</th>
-                <th className="px-4 py-3 border-b">Email</th>
-                <th className="px-4 py-3 border-b">Created At</th>
+        <div>
+          <table border={1} cellPadding={10} cellSpacing={0}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Created At</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user: User) => (
-                <tr key={user.id} className="text-sm">
-                  <td className="px-4 py-3 border-b align-top">{user.id}</td>
-                  <td className="px-4 py-3 border-b align-top">{user.firstName}</td>
-                  <td className="px-4 py-3 border-b align-top">{user.lastName}</td>
-                  <td className="px-4 py-3 border-b align-top">{user.email}</td>
-                  <td className="px-4 py-3 border-b align-top">{new Date(user.createdAt).toLocaleString()}</td>
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.email}</td>
+                  <td>{new Date(user.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
