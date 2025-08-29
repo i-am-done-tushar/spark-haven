@@ -29,7 +29,7 @@ const columns: Column<User>[] = [
 const Dashboard: React.FC = () => {
   const [search, setSearch] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [profile, setProfile] = React.useState({ firstName: "", lastName: "" });
+  const [profile, setProfile] = React.useState({ firstName: "", lastName: "", email: "" });
   const [users, setUsers] = React.useState<User[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
       if (!res.ok) return;
       const body = await res.json();
       const p = body?.data ?? body;
-      setProfile({ firstName: p.firstName ?? "", lastName: p.lastName ?? "" });
+      setProfile({ firstName: p.firstName ?? "", lastName: p.lastName ?? "", email: p.email ?? "" });
     } catch {
       // ignore
     }
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tokenRef.current}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ firstName: data.firstName, lastName: data.lastName, email: profile.email }),
     });
     if (!res.ok) {
       let message = "Failed to update profile";
@@ -127,8 +127,8 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-white">
       <AppHeader
         onSearchChange={setSearch}
-        onAddNew={() => {}}
         onFilter={() => {}}
+        userName={(profile.firstName + " " + profile.lastName).trim()}
       />
       <main className="mx-auto max-w-[1200px] px-6 py-6">
         <div className="mb-6 flex items-center justify-between gap-3">
@@ -152,7 +152,6 @@ const Dashboard: React.FC = () => {
         <div className="mb-4">
           <Toolbar
             onSearchChange={setSearch}
-            onAddNew={() => {}}
             onFilter={() => {}}
           />
         </div>
@@ -176,6 +175,7 @@ const Dashboard: React.FC = () => {
         onOpenChange={setOpen}
         firstName={profile.firstName}
         lastName={profile.lastName}
+        email={profile.email}
         onSave={handleSaveProfile}
       />
     </div>
