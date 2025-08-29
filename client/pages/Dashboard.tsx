@@ -29,7 +29,11 @@ const columns: Column<User>[] = [
 const Dashboard: React.FC = () => {
   const [search, setSearch] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [profile, setProfile] = React.useState({ firstName: "", lastName: "", email: "" });
+  const [profile, setProfile] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
   const [users, setUsers] = React.useState<User[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
@@ -84,7 +88,11 @@ const Dashboard: React.FC = () => {
       if (!res.ok) return;
       const body = await res.json();
       const p = body?.data ?? body;
-      setProfile({ firstName: p.firstName ?? "", lastName: p.lastName ?? "", email: p.email ?? "" });
+      setProfile({
+        firstName: p.firstName ?? "",
+        lastName: p.lastName ?? "",
+        email: p.email ?? "",
+      });
     } catch {
       // ignore
     }
@@ -110,7 +118,11 @@ const Dashboard: React.FC = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tokenRef.current}`,
       },
-      body: JSON.stringify({ firstName: data.firstName, lastName: data.lastName, email: profile.email }),
+      body: JSON.stringify({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: profile.email,
+      }),
     });
     if (!res.ok) {
       let message = "Failed to update profile";
@@ -150,10 +162,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <Toolbar
-            onSearchChange={setSearch}
-            onFilter={() => {}}
-          />
+          <Toolbar onSearchChange={setSearch} onFilter={() => {}} />
         </div>
 
         {error ? (

@@ -60,7 +60,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             Filter
           </Button>
           {userName ? (
-            <span className="ml-2 text-arcon-gray-primary font-roboto">{userName}</span>
+            <span className="ml-2 text-arcon-gray-primary font-roboto">
+              {userName}
+            </span>
           ) : null}
         </div>
       </div>
