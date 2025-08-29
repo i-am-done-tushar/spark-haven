@@ -39,4 +39,18 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+declare global {
+  interface Window { __app_root?: ReturnType<typeof createRoot> }
+}
+
+const container = document.getElementById("root")!;
+if (!window.__app_root) {
+  window.__app_root = createRoot(container);
+}
+window.__app_root.render(<App />);
+
+if (import.meta && (import.meta as any).hot) {
+  (import.meta as any).hot.accept(() => {
+    window.__app_root?.render(<App />);
+  });
+}
