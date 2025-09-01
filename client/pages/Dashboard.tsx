@@ -5,7 +5,7 @@ import DataTable, { Column } from "@/components/arcon/DataTable";
 import EditProfileDialog from "@/components/arcon/EditProfileDialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-
+//Every thing is running fine with new Database and frontend commit.
 interface User {
   id: number;
   firstName: string;
